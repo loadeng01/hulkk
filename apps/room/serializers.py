@@ -1,20 +1,27 @@
 from rest_framework import serializers
 from .models import *
+from apps.category.models import Category
 
 
-class PostImageSerializer(serializers.ModelSerializer):
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImages
         fields = '__all__'
 
 
-class PostCreateSerializer(serializers.ModelSerializer):
+class RoomCreateSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(required=True, queryset=Category.objects.all())
-    images = PostImageSerializer(many=True, required=False)
+    images = RoomImageSerializer(many=True, required=False)
 
     class Meta:
         model = Room
-        fields = ('title', 'body', 'category', 'preview', 'images')
+        fields = ('number', 'count_rooms', 'state', 'category', 'preview', 'images')
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -23,3 +30,21 @@ class PostCreateSerializer(serializers.ModelSerializer):
         for image in images_data:
             RoomImages.objects.create(image=image, post=post)
         return post
+
+
+class RoomListSerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField(source='category.name')
+
+    class Meta:
+        model = Room
+        fields = ('number', 'count_rooms', 'state', 'category_name', 'preview')
+
+
+class RoomDetailSerializer(serializers.ModelSerializer):
+    owner_username = serializers.ReadOnlyField(source='owner.username')
+    category_name = serializers.ReadOnlyField(source='category.name')
+    images = RoomImageSerializer(many=True)
+
+    class Meta:
+        model = Room
+        fields = '__all__'

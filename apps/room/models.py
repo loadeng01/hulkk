@@ -1,4 +1,5 @@
 from django.db import models
+from apps.category.models import Category
 
 
 class Room(models.Model):
@@ -8,13 +9,14 @@ class Room(models.Model):
 
     number = models.IntegerField()
     count_rooms = models.IntegerField()
+    category = models.ForeignKey(Category, related_name='rooms', on_delete=models.CASCADE)
     state = models.CharField(max_length=5, choices=RoomStatus, default=RoomStatus.free)
     preview = models.ImageField(upload_to='previews/')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Номера'
-        verbose_name_plural = 'Номер'
+        verbose_name = 'Номер'
+        verbose_name_plural = 'Номера'
 
 
 class RoomImages(models.Model):

@@ -33,7 +33,9 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # apps
-    'apps.account'
+    'apps.account',
+    'apps.category',
+    'apps.room'
 ]
 
 MIDDLEWARE = [
