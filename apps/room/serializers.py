@@ -21,7 +21,8 @@ class RoomCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('number', 'count_rooms', 'state', 'category', 'preview', 'images')
+        # fields = ('number', 'count_rooms', 'state', 'category', 'preview', 'images')
+        fields = '__all__'
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -33,16 +34,14 @@ class RoomCreateSerializer(serializers.ModelSerializer):
 
 
 class RoomListSerializer(serializers.ModelSerializer):
-    category_name = serializers.ReadOnlyField(source='category.name')
 
     class Meta:
         model = Room
-        fields = ('number', 'count_rooms', 'state', 'category_name', 'preview')
+        fields = ('id', 'number', 'count_rooms', 'state', 'category', 'preview')
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
     owner_username = serializers.ReadOnlyField(source='owner.username')
-    category_name = serializers.ReadOnlyField(source='category.name')
     images = RoomImageSerializer(many=True)
 
     class Meta:

@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     # apps
     'apps.account',
     'apps.category',
-    'apps.room'
+    'apps.room',
+    'apps.likes',
+    'apps.comments'
 ]
 
 MIDDLEWARE = [

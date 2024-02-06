@@ -7,7 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
 from apps.category.views import CategoryViewSet
-from apps.room.views import RoomViewSet
+from apps.room.views import RoomViewSet, UserFavoritesListView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -25,7 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/', schema_view.with_ui('swagger')),
     path('api/account/', include('apps.account.urls')),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/your_likes/', UserFavoritesListView.as_view())
 ]
 
 urlpatterns += static(
