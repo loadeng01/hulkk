@@ -48,6 +48,13 @@ class AccountSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+    def validate(self, attrs):
+        phone_number = attrs['phone_number']
+        if phone_number[0] != '+':
+            attrs['phone_number'] = '+' + phone_number
+
+        return attrs
+
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         data = {
