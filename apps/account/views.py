@@ -9,6 +9,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.db.utils import IntegrityError
 
 
 User = get_user_model()
@@ -22,15 +23,18 @@ class RegistrationCustomerView(APIView):
     permission_classes = permissions.AllowAny,
 
     def post(self, request):
-        serializer = RegisterCustomerSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        if user:
-            try:
-                send_confirmation_email.delay(user.email, user.activation_code)
-            except:
-                return Response({'message': 'Registered, but trouble with email',
-                                 'data': serializer.data}, status=201)
+        try:
+            serializer = RegisterCustomerSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            if user:
+                try:
+                    send_confirmation_email.delay(user.email, user.activation_code)
+                except:
+                    return Response({'message': 'Registered, but trouble with email',
+                                     'data': serializer.data}, status=201)
+        except IntegrityError:
+            return Response('This phone number is already exist', status=400)
 
         return Response(serializer.data, status=201)
 
