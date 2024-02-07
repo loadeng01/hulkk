@@ -18,6 +18,9 @@ class Room(models.Model):
         verbose_name = 'Номер'
         verbose_name_plural = 'Номера'
 
+    def __str__(self):
+        return f'{self.number} (rooms:{self.count_rooms})'
+
 
 class RoomImages(models.Model):
     image = models.ImageField(upload_to='rooms/')

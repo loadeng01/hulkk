@@ -7,7 +7,7 @@ from celery import shared_task
 # @app.task()
 @shared_task()
 def send_confirmation_email(email, code):
-    activation_url = f'http://13.60.20.157/api/account/activate/?u={code}'
+    activation_url = f'https://cmsup.net.kg/api/account/activate/?u={code}'
 
     message = format_html(
         '<h2>Hello, activate your account!</h2>\n'
