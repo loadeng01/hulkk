@@ -6,6 +6,7 @@ class Room(models.Model):
     class RoomStatus(models.TextChoices):
         free = 'free'
         busy = 'busy'
+        reserved = 'reserved'
 
     number = models.IntegerField()
     count_rooms = models.IntegerField()
