@@ -23,18 +23,20 @@ class RegistrationCustomerView(APIView):
     permission_classes = permissions.AllowAny,
 
     def post(self, request):
+
         try:
             serializer = RegisterCustomerSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
-            if user:
-                try:
-                    send_confirmation_email.delay(user.email, user.activation_code)
-                except:
-                    return Response({'message': 'Registered, but trouble with email',
-                                     'data': serializer.data}, status=201)
         except IntegrityError:
             return Response('This phone number is already exist', status=400)
+
+        if user:
+            try:
+                send_confirmation_email.delay(user.email, user.activation_code)
+            except:
+                return Response({'message': 'Registered, but trouble with email',
+                                 'data': serializer.data}, status=201)
 
         return Response(serializer.data, status=201)
 

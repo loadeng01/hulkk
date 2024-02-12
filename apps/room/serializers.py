@@ -16,7 +16,7 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 
 class RoomCreateSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(required=True, queryset=Category.objects.all())
+    # category = serializers.PrimaryKeyRelatedField(required=True, queryset=Category.objects.all())
     images = RoomImageSerializer(many=True, required=False)
 
     class Meta:
@@ -28,8 +28,11 @@ class RoomCreateSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         post = Room.objects.create(**validated_data)
         images_data = request.FILES.getlist('images')
-        for image in images_data:
-            RoomImages.objects.create(image=image, post=post)
+
+        if images_data:
+            for image in images_data:
+                RoomImages.objects.create(image=image, post=post)
+
         return post
 
 
@@ -37,7 +40,7 @@ class RoomListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'number', 'count_rooms', 'state', 'category', 'preview')
+        fields = ('id', 'number', 'count_rooms', 'state', 'preview')
 
 
 class RoomDetailSerializer(serializers.ModelSerializer):
